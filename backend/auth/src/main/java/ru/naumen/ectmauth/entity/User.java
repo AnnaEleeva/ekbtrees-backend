@@ -11,9 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "users")
-public class User {
-
-    @Id
+public class User { @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
@@ -31,7 +29,6 @@ public class User {
     private String password;
     @Schema(description = "Телефон", example = "+79222298897")
     private String phone;
-
     @Enumerated(EnumType.STRING)
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "Провайдер", example = "VK")
     private Provider provider;
@@ -56,6 +53,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Token> tokens = new HashSet<Token>();
 
+
+
+
+
     public Set<Token> getTokens() {
         return tokens;
     }
@@ -63,7 +64,6 @@ public class User {
     public void setTokens(Set<Token> tokens) {
         this.tokens = tokens;
     }
-
 
     public Long getUser_id() {
         return user_id;

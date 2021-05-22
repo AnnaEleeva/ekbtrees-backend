@@ -12,7 +12,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Schema(description = "Провайдер", example = "VK")
+    @Schema(description = "Роль", example = "ADMIN")
     private String name;
 
     public Integer getId() {
