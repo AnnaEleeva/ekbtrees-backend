@@ -1,16 +1,21 @@
 package ru.naumen.ectmauth.entity;
 
 
-import java.util.Date;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import org.hibernate.annotations.CreationTimestamp;
 
+@Data
 @Entity
 @Table(name = "users")
+@EqualsAndHashCode(callSuper = true)
+public class User extends BaseEntity {
+
+    @Column
 public class User { @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,27 +26,33 @@ public class User { @Id
     private Date created;
     @Schema(description = "Почта", example = "naumen@mail.ru")
     private String email;
-    @Schema(description = "Имя", example = "Иван")
+
+    @Column(name = "first_name")
     private String firstName;
-    @Schema(description = "Фамилия", example = "Иванов")
+
+    @Column(name = "last_name")
     private String lastName;
-    @Schema(description = "Пароль", example = "p1a2s3s4w5o6r7d")
+
+    @Column
     private String password;
-    @Schema(description = "Телефон", example = "+79222298897")
+
+    @Column
     private String phone;
+
+    @Column
     @Enumerated(EnumType.STRING)
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "Провайдер", example = "VK")
     private Provider provider;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+
+    @Column
     private boolean enabled;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "Идентификатор пользователя Вконтакте")
-    private String vk_id;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "Идентификатор пользователя Вконтакте")
-    private String fb_id;
 
+    @Column(name = "vk_id")
+    private Long vkId;
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Column(name = "fb_id")
+    private Long fbId;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "role_id"),
@@ -49,6 +60,8 @@ public class User { @Id
     )
     private Set<Role> roles = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<RefreshToken> refreshTokens = new HashSet<>();
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @OneToMany(mappedBy = "user")
     private Set<Token> tokens = new HashSet<Token>();
